@@ -19,8 +19,17 @@ export const useLogin = () => {
 
       const json = response.data;
 
-      // Store user data in local storage and dispatch login action
-      localStorage.setItem("user", JSON.stringify(json));
+      // Store user data in local storage and dispatch login action      
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: json.user.name,
+          email: json.user.email,
+          role: json.user.role,
+          token: json.token,
+        })
+      );
+
       dispatch({ type: "LOGIN", payload: json });
 
       setIsLoading(false);

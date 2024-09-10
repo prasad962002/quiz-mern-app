@@ -4,6 +4,7 @@ import Signup from "./components/Signup";
 import Home from "./components/Home";
 import PageNotFound from "./components/PageNotFound";
 import { Toaster } from "react-hot-toast";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
     <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route path="/*" element={ <PageNotFound/> }/>
-        <Route path="/" element={ <Home/> }/>
+        <Route path="/" element={ <Dashboard/> }/>
         <Route path="/login" element={ <Login/> }/>
         <Route path="/signup" element={ <Signup/> }/>
       </Routes>

@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const User = require("./models/User");
 const userRoute = require("./routes/userRoute");
+const { requireAuth, requireAdmin } = require("./middleware/authMiddleware");
+
+
 //express app
 const app = express();
 
@@ -22,8 +25,19 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello");
+// Public route
+app.get("/public", (req, res) => {
+  res.json({ message: "This is a public route" });
+});
+
+// Protected route for authenticated users
+app.get("/user", requireAuth, (req, res) => {
+  res.json({ message: "This is a protected route for users" });
+});
+
+// Admin-only route
+app.get("/admin", requireAuth, requireAdmin, (req, res) => {
+  res.json({ message: "This is a protected route for admins" });
 });
 
 async function createUser() {
