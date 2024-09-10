@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import axios from "axios";
 
 export const useSignup = () => {
   const [error, setError] = useState(null);
@@ -9,27 +10,30 @@ export const useSignup = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("/api/user/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    const json = await response.json();
-    if (!response.ok) {
-      setIsLoading(false);
-      setError(json.error);
-      return { success: false, error: json.error };
-    }
-    if (response.ok) {
+    try {
+       // Making the POST request using axios
+      const response = await axios.post("/api/user/signup", {
+        name,
+        email,
+        password,
+      });
+      
+      const json = await response.data;
       //save user to local storage
       localStorage.setItem("user", JSON.stringify(json));
 
-      //update auth context
+      // Update auth context with the newly signed-up user
       dispatch({ type: "LOGIN", payload: json });
       setIsLoading(false);
       return { success: true };
-    } 
+    } catch (err) {
+      
+      setIsLoading(false);
+      // If the server provides a specific error message, use it, otherwise use a generic message
+      setError(err.response?.data?.error || "Signup failed. Please try again.");
+      return { success: false, error: err.response?.data?.error || "Signup failed. Please try again." };
+    }
+          
   };
   return { signup, isLoading, error };
 };
