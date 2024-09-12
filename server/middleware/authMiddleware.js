@@ -11,12 +11,12 @@ const requireAuth = async (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
-  // console.log("Token: ", token);
-
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
     // console.log("Decoded Token: ", decoded);
-    req.user = await User.findById(decoded._id).select('-password');
+    req.user = await User.findById(decoded._id).select("-password");
+    // console.log(req.user);
+
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }

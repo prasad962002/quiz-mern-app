@@ -13,7 +13,7 @@ const app = express();
 //middlewares
 app.use(
   cors({
-    origin: ["http://localhost:4000"],
+    origin: ["http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -26,17 +26,17 @@ app.use((req, res, next) => {
 });
 
 // Public route
-app.get("/public", (req, res) => {
+app.get("/api/public", (req, res) => {
   res.json({ message: "This is a public route" });
 });
 
 // Protected route for authenticated users
-app.get("/user", requireAuth, (req, res) => {
+app.get("/api/user", requireAuth, (req, res) => {
   res.json({ message: "This is a protected route for users" });
 });
 
 // Admin-only route
-app.get("/admin", requireAuth, requireAdmin, (req, res) => {
+app.get("/api/admin", requireAuth, requireAdmin, (req, res) => {
   res.json({ message: "This is a protected route for admins" });
 });
 

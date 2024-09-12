@@ -11,17 +11,17 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { success, error } = await login(email, password); // Capture the result of the login attempt
+    const { success, error, role } = await login(email, password); // Capture the result of the login attempt
 
     if (success) {
       toast.success("Logged in Successfully");
-      navigate("/");
+      navigate(location.state || `/dashboard/${role}`);
     } else {
       toast.error(error); // Show error message if login fails
     }
   };
   return (
-    <div>      
+    <div>
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900">

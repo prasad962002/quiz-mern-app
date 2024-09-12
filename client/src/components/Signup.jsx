@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSignup } from "../hooks/useSignup";
 import { toast, Toaster } from "react-hot-toast";
 const Signup = () => {
@@ -8,19 +8,21 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
   const { signup, isLoading, error } = useSignup();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(password !== cpassword){
+    if (password !== cpassword) {
       toast.error("Password doesn't match");
       return;
     }
-    const { success, error }  = await signup(name, email, password);
+    const { success, error } = await signup(name, email, password);
     if (success) {
       toast.success("Signed Up Successfully");
+      navigate(location.state || "/");
     } else {
       toast.error(error); // Show error message if login fails
-    } 
+    }
   };
   return (
     <div>

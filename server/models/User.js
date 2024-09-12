@@ -23,11 +23,8 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin"], // Only two roles: 'user' and 'admin'
     default: "user", // Default is 'user'
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+ 
+}, { timestamps: true });
 
 // Create the User model
 const User = mongoose.model("User", userSchema);

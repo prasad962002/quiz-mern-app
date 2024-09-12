@@ -17,24 +17,22 @@ export const useLogin = () => {
         password,
       });
 
-      const json = response.data;
+      const { user, token } = response.data;
 
-      // Store user data in local storage and dispatch login action      
+      // Store user data in local storage and dispatch login action
       localStorage.setItem(
         "user",
         JSON.stringify({
-          name: json.user.name,
-          email: json.user.email,
-          role: json.user.role,
-          token: json.token,
+          ...user,
+          token,
         })
       );
 
-      dispatch({ type: "LOGIN", payload: json });
+      dispatch({ type: "LOGIN", payload: { ...user, token } });
 
       setIsLoading(false);
       setError(null);
-      return { success: true };
+      return { success: true, role: user.role };
     } catch (err) {
       setIsLoading(false);
       // If the server provides a specific error message, use it, otherwise use a generic message

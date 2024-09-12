@@ -11,9 +11,9 @@ const LOGOUT = "LOGOUT";
 export const authReducer = (state, action) => {
   switch (action.type) {
     case LOGIN:
-      return { user: action.payload };
+      return {...state, user: action.payload };
     case LOGOUT:
-      return { user: null };
+      return {...state,  user: null };
     default:
       return state;
   }
@@ -27,15 +27,14 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      dispatch({ type: LOGIN, payload: JSON.parse(storedUser) });
+      const parsedUser = JSON.parse(storedUser);
+      const {token, ...userData} = parsedUser;
+      dispatch({ type: LOGIN, payload: {...userData, token} });
     }
   }, []);
 
-  // Memoize the context value to avoid unnecessary re-renders
-  const contextValue = useMemo(() => ({ ...state, dispatch }), [state]);
-
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={{user : state.user, token : state.user?.token, dispatch}}>
       {children}
     </AuthContext.Provider>
   );
