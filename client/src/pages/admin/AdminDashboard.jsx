@@ -1,24 +1,16 @@
-import { useNavigate } from "react-router-dom";
-import useLogout from "../../hooks/useLogout";
+import Layout from "../../components/layout/Layout";
+import { useAuthContext } from "../../hooks/useAuthContext";
+
 
 const AdminDashboard = () => {
-  const { logout } = useLogout();
-  const navigate = useNavigate(); // Use the hook here
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const {user} = useAuthContext();  
   return (
-    <div>
-      <h1>Admin Dashboard</h1>
-      <button
-        type="button"
-        className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
-    </div>
+    <Layout role="admin">
+      <div className="mt-20 text-2xl font-semibold text-center">   
+        <h1>Admin Dashboard</h1>
+        <p>Welcome {user.name} !</p>
+      </div>
+    </Layout>
   );
 };
 

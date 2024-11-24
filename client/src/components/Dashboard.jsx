@@ -9,7 +9,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    user ? navigate(`/dashboard/${user.role}`) : navigate("/login");
+    user ? navigate(`/${user.role}/dashboard`) : navigate("/login");
   }, [navigate, user]);
 
   // If `user` is not available yet, render a loading or placeholder UI

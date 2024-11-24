@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import { Outlet } from "react-router-dom";
-import Spinner from "../components/Spinner";
+import Spinner from "../components/common/Spinner";
 
 const UserRoute = () => {
   const [ok, setOk] = useState(false);
@@ -12,7 +12,7 @@ const UserRoute = () => {
       response.data.ok ? setOk(true) : setOk(false);
     };
     authCheck();
-  });
+  }, []);
 
   return ok ? <Outlet /> : <Spinner path="" />;
 };

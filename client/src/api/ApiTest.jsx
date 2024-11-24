@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance from "./axiosInstance";
 
 const ApiTest = () => {
   const [data, setData] = useState(null);
