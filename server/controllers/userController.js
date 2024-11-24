@@ -17,7 +17,6 @@ const loginUser = async (req, res) => {
     if (!email || !password) {
       throw new Error("All fields are required");
     }
-
     // Check if user exists
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
@@ -39,6 +38,9 @@ const loginUser = async (req, res) => {
       user: {
         _id: user._id,
         name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        gender: user.gender,
         email: user.email,
         role: user.role,
       },
@@ -51,11 +53,11 @@ const loginUser = async (req, res) => {
 
 // Signup user controller
 const signupUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { firstName, lastName, email, password, gender } = req.body;
 
   try {
     // Validate inputs
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password || !gender) {
       throw new Error("All fields are required");
     }
 
@@ -79,9 +81,11 @@ const signupUser = async (req, res) => {
 
     // Create new user
     const user = await User.create({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
+      gender,
     });
 
     // Create JWT token
@@ -93,6 +97,9 @@ const signupUser = async (req, res) => {
       user: {
         _id: user._id,
         name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        gender: user.gender,
         email: user.email,
         role: user.role,
       },
@@ -103,4 +110,23 @@ const signupUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, signupUser };
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { firstName, lastName, gender } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { firstName, lastName, gender },
+      { new: true }
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { loginUser, signupUser, updateUser };

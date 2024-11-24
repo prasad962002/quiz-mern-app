@@ -2,10 +2,11 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const User = require("./models/User");
 const userRoute = require("./routes/userRoute");
-const { requireAuth, requireAdmin } = require("./middleware/authMiddleware");
-
+const categoryRoute = require("./routes/categoryRoute");
+const quizRoute = require("./routes/quizRoute");
+const quizResultRoute = require("./routes/quizResultRoute");
+const User = require("./models/User");
 
 //express app
 const app = express();
@@ -22,51 +23,25 @@ app.use(
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(req.path, req.method);
+  console.log("Request Body:", req.body);
   next();
 });
 
-// Public route
-app.get("/api/public", (req, res) => {
-  res.json({ message: "This is a public route" });
-});
-
-// Protected route for authenticated users
-app.get("/api/user", requireAuth, (req, res) => {
-  res.json({ message: "This is a protected route for users" });
-});
-
-// Admin-only route
-app.get("/api/admin", requireAuth, requireAdmin, (req, res) => {
-  res.json({ message: "This is a protected route for admins" });
-});
-
-async function createUser() {
-  try {
-    const newUser = new User({
-      name: "John Doe",
-      email: "johndoe@example.com",
-      password: "securepassword123", // Note: Hash the password in real-world applications
-    });
-    const savedUser = await newUser.save(); // Save the user to the database
-    console.log("User added successfully:", savedUser);
-  } catch (error) {
-    console.error("Error adding user:", error);
-  }
-}
-
-app.get("/hi", (req, res) => {
-  res.send("Hello");
-  createUser();
-});
 const PORT = process.env.PORT || 3000;
 
 app.use("/api/user", userRoute);
 
+app.use("/api/category", categoryRoute);
+
+app.use("/api/quiz", quizRoute);
+
+app.use("/api/result", quizResultRoute);
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Connect to db Listening on port ${PORT}`);
+    app.listen(PORT, async() => {
+      console.log(`Connect to db Listening on port ${PORT}`);      
     });
   })
   .catch((error) => {
